@@ -34,6 +34,8 @@ function App() {
     setLis(lis.map(li => {
       if(li.id === id) {
         console.log(value, id)
+        li.value = value; // 기존 li value에 사용자가 입력한 값 업데이트
+        li.flag = false ;
       }
       return li
     }));
