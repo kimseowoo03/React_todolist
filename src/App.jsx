@@ -1,10 +1,10 @@
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 
 function App() { 
   const [liValue, setLiValue] = useState(''); //값 바꾸기
   const [lis, setLis] = useState([]); // li 객체들
-  // 이미 만들어 놨네요 이거 수정에 쓰면 됨
   const [changeValue, setChangeValue] = useState('');
+  const [error, setError] = useState('');
 
 
   const changeFlag = (id) => {
@@ -16,12 +16,24 @@ function App() {
    }));
   }
 
-  const addList = () => {
-    setLis([
-      ...lis,
-      {value: liValue, flag: false, id: Date.now() },
-    ]);
-    setLiValue('');
+  const emptyValue = () => { // li value 빈값여부 
+    let valueDate = true ; 
+    if(!liValue) {
+      setError('안에 내용을 입력해주세요');
+      valueDate = false ;
+    }
+    return valueDate ;
+  }
+
+  const addList = () => { // lis에 새로운 객체 추가하기
+    if(emptyValue()) { // 객체로 추가하기 전에 조건 확인하기
+      setLis([
+        ...lis,
+        {value: liValue, flag: false, id: Date.now() },
+      ]);
+      setLiValue('');
+      setError('');
+    }
   }
 
   const deletBtn = (targetId) => {
@@ -33,7 +45,6 @@ function App() {
   const edit = (value, id) => {
     setLis(lis.map(li => {
       if(li.id === id) {
-        console.log(value, id)
         li.value = value; // 기존 li value에 사용자가 입력한 값 업데이트
         li.flag = false ;
       }
@@ -41,7 +52,7 @@ function App() {
     }));
   };
   
-  const renderList = lis.map(li => {
+  const renderList = lis.map(li => { // lis 객체들을 하나씩(li) 넣어보고 적용해서 출력
     return(
       <li key={li.id}>
         {li.flag ?( // flag = true
@@ -51,13 +62,13 @@ function App() {
         )}
         {li.flag ?(
           <>
-          <button onClick={() => deletBtn(li.id)}>삭제</button>
           <button onClick={() => edit(changeValue, li.id)}>확인</button>
+          <button onClick={() => deletBtn(li.id)}>삭제</button>
           </>
         ) :(
           <>
-          <button onClick={() => deletBtn(li.id)}>삭제</button>
           <button onClick={() => changeFlag(li.id)}>수정</button>
+          <button onClick={() => deletBtn(li.id)}>삭제</button>
           </>
         )}
       </li>
@@ -70,10 +81,10 @@ function App() {
       <div>
         <input type='text' value={liValue} onChange={(e) => setLiValue(e.target.value)} />
         <button onClick={addList}>+</button>
-        {renderList}
+        <p>{error}</p>
       </div>
       <ul>
-
+      {renderList}
       </ul>
     </div>
   );
