@@ -25,7 +25,8 @@ function RenderLi(props) {
       const edit = (value, id) => {
         setLis(lis.map(li => {
           if(li.id === id) {
-            if(value === '' || li.value) {
+            console.log(changeValue);
+            if(value === '' || value === li.value ) {
               alert('안에 값이 수정되지 않았습니다. 수정 하지 않으실 거면 취소를 눌러주세요');
             }else {
               li.value = value; // 기존 li value에 사용자가 입력한 값 업데이트
